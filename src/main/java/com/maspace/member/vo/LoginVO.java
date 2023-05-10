@@ -1,4 +1,4 @@
-package com.maspace.vo;
+package com.maspace.member.vo;
 
 import lombok.Data;
 

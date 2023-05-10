@@ -1,11 +1,11 @@
-package com.maspace.vo;
+package com.maspace.member.vo;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class UserVO {
+public class MemberVO {
     private int id;
     private String username;
     private String email;

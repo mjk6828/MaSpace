@@ -1,10 +1,8 @@
-package com.maspace.controller;
+package com.maspace.member.controller;
 
-import com.maspace.vo.LoginVO;
-import com.maspace.vo.UserRegVO;
-import com.maspace.vo.UserVO;
+import com.maspace.member.vo.LoginVO;
+import com.maspace.member.vo.MemberRegVO;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @RestController
-public class UserController {
+public class MemberController {
 
     @GetMapping("/users")
     @ApiOperation(value = "유저 조회", notes = "유저 조회 API")
@@ -49,7 +47,7 @@ public class UserController {
 //                    name = "remark", value = "비고", required = false, dataType = "string", defaultValue = ""
 //            )
 //    })
-    public Object user_reg(@RequestBody UserRegVO vo) {
+    public Object user_reg(@RequestBody MemberRegVO vo) {
 
         return vo;
     }

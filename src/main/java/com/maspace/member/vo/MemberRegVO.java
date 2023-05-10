@@ -1,11 +1,10 @@
-package com.maspace.vo;
+package com.maspace.member.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 @Data
-public class UserRegVO {
+public class MemberRegVO {
 //    @ApiModelProperty(name = "username", example = "seung")
     @ApiParam(value = "유저 로그인 ID", required = true)
     private String username;

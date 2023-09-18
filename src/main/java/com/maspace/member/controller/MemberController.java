@@ -2,18 +2,19 @@ package com.maspace.member.controller;
 
 import com.maspace.member.vo.LoginVO;
 import com.maspace.member.vo.MemberRegVO;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-
+@Tag(name="로그인", description = "로그인 관리")
 @RestController
+@RequestMapping("/api/v0.9")
 public class MemberController {
 
     @GetMapping("/users")
-    @ApiOperation(value = "유저 조회", notes = "유저 조회 API")
+    @Operation(summary = "유저 조회", description = "유저 조회 API")
     public Object Users() {
         HashMap<String, String> result = new HashMap<String, String>();
         result.put("msg", "success");
@@ -21,7 +22,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "로그인(토큰 발행)", notes = "로그인하여 JWT 토큰을 발행하는 API")
+    @Operation(summary = "로그인(토큰 발행)", description = "로그인하여 JWT 토큰을 발행하는 API")
     public Object login(Model model, @RequestBody LoginVO vo) {
 //        String name = username;
 //        String pass = vo.getPassword();
@@ -32,29 +33,14 @@ public class MemberController {
     }
 
     @PostMapping("/user")
-    @ApiOperation(value = "유저 등록", notes = "유저 등록 API")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(
-//                    name = "username", value = "로그인아이디", required = true, dataType = "string"
-//            ),
-//            @ApiImplicitParam(
-//                    name = "email", value = "유저 이메일", required = true, dataType = "string"
-//            ),
-//            @ApiImplicitParam(
-//                    name = "password", value = "유저 비밀번호", required = true, dataType = "string"
-//            ),
-//            @ApiImplicitParam(
-//                    name = "remark", value = "비고", required = false, dataType = "string", defaultValue = ""
-//            )
-//    })
+    @Operation(summary = "유저 등록", description = "유저 등록 API")
     public Object user_reg(@RequestBody MemberRegVO vo) {
 
         return vo;
     }
 
     @GetMapping("/user/{id}")
-    @ApiOperation(value = "유저 상세조회", notes = "유저 상세조회 API")
-    @ApiImplicitParam(name = "id", value = "유저 ID") // Swagger 에 사용하는 파라미터에 대한 설명
+    @Operation(summary = "유저 상세조회", description = "유저 상세조회 API")
     public Object user_detail(@PathVariable String id) {
         HashMap<String, String> result = new HashMap<String, String>();
         result.put("id", id);
@@ -63,8 +49,7 @@ public class MemberController {
     }
 
     @PutMapping("/user/{id}")
-    @ApiOperation(value = "유저 수정", notes = "유저 수정 API")
-    @ApiImplicitParam(name = "id", value = "유저 ID")
+    @Operation(summary = "유저 수정", description = "유저 수정 API")
     public Object user_update(@PathVariable String id) {
         HashMap<String, String> result = new HashMap<String, String>();
         result.put("id", id);
@@ -73,8 +58,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/user/{id}")
-    @ApiOperation(value = "유저 삭제", notes = "유저 삭제 API")
-    @ApiImplicitParam(name = "id", value = "유저 ID")
+    @Operation(summary = "유저 삭제", description = "유저 삭제 API")
     public Object user_delete(@PathVariable String id) {
         HashMap<String, String> result = new HashMap<String, String>();
         result.put("id", id);

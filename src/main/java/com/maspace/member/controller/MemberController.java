@@ -4,13 +4,18 @@ import com.maspace.member.vo.LoginVO;
 import com.maspace.member.vo.MemberRegVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 @Tag(name="로그인", description = "로그인 관리")
 @RestController
-@RequestMapping("/api/v0.9")
+//@RequestMapping("/api/v0.9")
 public class MemberController {
 
     @GetMapping("/users")
@@ -64,6 +69,35 @@ public class MemberController {
         result.put("id", id);
 
         return result;
+    }
+
+    @GetMapping("/kakao/login")
+    @Operation(summary = "카카오 동의항목", description = "카카오 동의항목 API")
+    public Object kakaoLogin() throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+//        String url = "https://kauth.kakao.com/oauth/authorize";
+        String redirectUrl = "http://localhost:8080/kakao/oauth";
+        HttpUrl httpUrl = new HttpUrl.Builder()
+                .scheme("https")
+                .host("https://kauth.kakao.com/oauth/authorize") // <- 8873 code passthru parameter on method
+                .addQueryParameter("client_id", "a95991df84a6c8dd50d4597faae9ca1b")
+                .addQueryParameter("redirect_url", redirectUrl)
+                .addQueryParameter("response_type", "code")
+                .build();
+        Request request = new Request.Builder()
+                .url(httpUrl)
+                .get()
+                .build();
+
+        Response response = okHttpClient.newCall(request).execute();
+        return "redirect:"+redirectUrl;
+    }
+
+    @GetMapping("kakao/oauth")
+    @Operation(summary = "카카오 로그인", description = "카카오 로그인")
+    public void kakaoOauth() {
+
+        System.out.println("oauth");
     }
 
 }

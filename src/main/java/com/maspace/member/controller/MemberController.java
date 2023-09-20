@@ -4,15 +4,23 @@ import com.maspace.member.vo.LoginVO;
 import com.maspace.member.vo.MemberRegVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
+
+@Slf4j
 @Tag(name="로그인", description = "로그인 관리")
 @RestController
 //@RequestMapping("/api/v0.9")
@@ -73,29 +81,42 @@ public class MemberController {
 
     @GetMapping("/kakao/login")
     @Operation(summary = "카카오 동의항목", description = "카카오 동의항목 API")
-    public Object kakaoLogin() throws IOException {
-        OkHttpClient okHttpClient = new OkHttpClient();
+    public ResponseEntity<?> kakaoLogin(HttpServletResponse response) throws IOException {
+//        OkHttpClient okHttpClient = new OkHttpClient();
 //        String url = "https://kauth.kakao.com/oauth/authorize";
         String redirectUrl = "http://localhost:8080/kakao/oauth";
-        HttpUrl httpUrl = new HttpUrl.Builder()
-                .scheme("https")
-                .host("https://kauth.kakao.com/oauth/authorize") // <- 8873 code passthru parameter on method
-                .addQueryParameter("client_id", "a95991df84a6c8dd50d4597faae9ca1b")
-                .addQueryParameter("redirect_url", redirectUrl)
-                .addQueryParameter("response_type", "code")
-                .build();
-        Request request = new Request.Builder()
-                .url(httpUrl)
-                .get()
-                .build();
+        String kakaoLoginUrl = "https://kauth.kakao.com/oauth/authorize";
+        String client_id = "a95991df84a6c8dd50d4597faae9ca1b";
+        HttpUrl.Builder httpUrl = HttpUrl.get("https://kauth.kakao.com/oauth/authorize").newBuilder();
+                httpUrl.addQueryParameter("client_id", "a95991df84a6c8dd50d4597faae9ca1b");
+                httpUrl.addQueryParameter("redirect_uri", redirectUrl);
+                httpUrl.addQueryParameter("response_type", "code");
+                httpUrl.build();
 
-        Response response = okHttpClient.newCall(request).execute();
-        return "redirect:"+redirectUrl;
+                String KakaoUrl = httpUrl.toString();
+//        Request request = new Request.Builder()
+//                .url(httpUrl.build())
+//                .build();
+        String returnUrl = kakaoLoginUrl+"?client_id="+client_id+"&redirect_uri="+redirectUrl+"&response_type=code";
+        log.info("returnUrl : " + returnUrl);
+//        Response response = okHttpClient.newCall(request).execute();
+//        String responseString = response.body().string();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(KakaoUrl));
+//        HashMap<String, String> result = new HashMap<String, String>();
+//        result.put("url", returnUrl);
+//        response.sendRedirect(returnUrl);
+
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
-    @GetMapping("kakao/oauth")
+    @GetMapping("/kakao/oauth")
     @Operation(summary = "카카오 로그인", description = "카카오 로그인")
-    public void kakaoOauth() {
+    public void kakaoOauth(
+            @RequestParam("code") String code
+    ) {
+
+        log.info("code : "+ code);
 
         System.out.println("oauth");
     }
